@@ -25,6 +25,7 @@ public class CityController {
 
     @GetMapping
     public List<City> findAll() {
+//qwe
         return cityService.findAll();
     }
 
