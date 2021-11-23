@@ -202,9 +202,135 @@ deleteCity = async (city) => {
     }
 }
 
+editCategory = (category) => {
+    showPage("editCategory");
+    document.getElementById("editCategory-id").value = category.id;
+    document.getElementById("editCategory-name").value = category.name;
+}
+
+saveCategory = async () => {
+    let id = document.getElementById("editCategory-id").value;
+    let name = document.getElementById("editCategory-name").value;
+
+    const settings = {
+        method: 'PUT',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            id: id,
+            name: name
+        })
+    };
+
+    await fetch(`/categories`, settings);
+    showCategories();
+}
+
+deleteCategory = async (category) => {
+    if (confirm('Вы уверены, что хотите удалить ' + category.name + ' категория?')) {
+        const settings = {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+
+        await fetch(`/categories/` + category.id, settings);
+
+        showCategories();
+    }
+}
+
 showEducations = () => {
     document.title = 'Поликлиника - Учебные заведения';
     showPage("educations");
+
+    let elements = document.querySelectorAll(".education-row");
+    elements.forEach(element => {
+        element.parentNode.removeChild(element);
+    });
+
+    let educationsTable = document.getElementById("tbody-educations");
+    getEducations().then(response => {
+        response.forEach((education, index) => {
+            let row = educationsTable.insertRow(index);
+            row.className = "education-row";
+
+            let cell = row.insertCell(0);
+            let text = document.createTextNode(index + 1);
+            cell.appendChild(text);
+
+            cell = row.insertCell(1);
+            text = document.createTextNode(education.name);
+            cell.appendChild(text);
+
+            cell = row.insertCell(2);
+            text = document.createTextNode(education.city.name);
+            cell.appendChild(text);
+
+            cell = row.insertCell(3);
+            let btnEdit = document.createElement("BUTTON");
+            btnEdit.className = "btn btn-primary btn-sm";
+            btnEdit.innerHTML = "Edit";
+            btnEdit.onclick = () => {
+                editEducation(education);
+                return false;
+            };
+
+            cell.appendChild(btnEdit);
+
+            let btnDelete = document.createElement("BUTTON");
+            btnDelete.className = "btn btn-danger btn-sm";
+            btnDelete.innerHTML = "Delete";
+
+            btnDelete.onclick = () => {
+                deleteEducation(education);
+                return false;
+            };
+            cell.appendChild(btnDelete);
+        })
+    });
+}
+
+editEducation = async (education) => {
+    showPage("editEducation");
+    document.getElementById("editEducation-id").value = education.id;
+    document.getElementById("editEducation-name").value = education.name;
+
+    await getCities();
+
+    let editEducationSelect = document.getElementById("editEducation-city-select");
+
+    for (let i = 0; i < cities.length; i++) {
+        editEducationSelect.remove(0);
+    }
+
+    for (let city of cities) {
+        let option = document.createElement("option");
+        option.value = city.id;
+        option.text = city.name;
+
+        if (education.city.name === city.name) {
+            option.selected = true;
+        }
+        editEducationSelect.add(option);
+    }
+}
+
+getEducations = async () => {
+    const settings = {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    };
+
+    const fetchResponse = await fetch(`/educations`, settings);
+    return await fetchResponse.json();
 }
 
 showSalary = () => {
@@ -215,11 +341,101 @@ showSalary = () => {
 showCategories = () => {
     document.title = 'Поликлиника - Категории';
     showPage("categories");
+
+    let elements = document.querySelectorAll(".category-row");
+    elements.forEach(element => {
+        element.parentNode.removeChild(element);
+    });
+
+    let citiesTable = document.getElementById("tbody-categories");
+    getCategories().then(response => {
+        response.forEach((category, index) => {
+            let row = citiesTable.insertRow(index);
+            row.className = "category-row";
+
+            let cell = row.insertCell(0);
+            let text = document.createTextNode(index + 1);
+            cell.appendChild(text);
+
+            cell = row.insertCell(1);
+            text = document.createTextNode(category.name);
+            cell.appendChild(text);
+
+            cell = row.insertCell(2);
+            let btnEdit = document.createElement("BUTTON");
+            btnEdit.className = "btn btn-primary btn-sm";
+            btnEdit.innerHTML = "Edit";
+            btnEdit.onclick = () => {
+                editCategory(category);
+                return false;
+            };
+
+            cell.appendChild(btnEdit);
+
+            let btnDelete = document.createElement("BUTTON");
+            btnDelete.className = "btn btn-danger btn-sm";
+            btnDelete.innerHTML = "Delete";
+
+            btnDelete.onclick = () => {
+                deleteCategory(category);
+                return false;
+            };
+            cell.appendChild(btnDelete);
+        })
+    });
 }
 
 showPositions = () => {
     document.title = 'Поликлиника - Должности';
     showPage("positions");
+
+    let elements = document.querySelectorAll(".position-row");
+    elements.forEach(element => {
+        element.parentNode.removeChild(element);
+    });
+
+    let citiesTable = document.getElementById("tbody-positions");
+    getPositions().then(response => {
+        response.forEach((position, index) => {
+            let row = citiesTable.insertRow(index);
+            row.className = "position-row";
+
+            let cell = row.insertCell(0);
+            let text = document.createTextNode(index + 1);
+            cell.appendChild(text);
+
+            cell = row.insertCell(1);
+            text = document.createTextNode(position.name);
+            cell.appendChild(text);
+
+            cell = row.insertCell(2);
+            let btnEdit = document.createElement("BUTTON");
+            btnEdit.className = "btn btn-primary btn-sm";
+            btnEdit.innerHTML = "Edit";
+            btnEdit.onclick = () => {
+                editPosition(position);
+                return false;
+            };
+
+            cell.appendChild(btnEdit);
+
+            let btnDelete = document.createElement("BUTTON");
+            btnDelete.className = "btn btn-danger btn-sm";
+            btnDelete.innerHTML = "Delete";
+
+            btnDelete.onclick = () => {
+                deletePosition(position);
+                return false;
+            };
+            cell.appendChild(btnDelete);
+        })
+    });
+}
+
+editPosition = (category) => {
+    showPage("editPosition");
+    document.getElementById("editPosition-id").value = category.id;
+    document.getElementById("editPosition-name").value = category.name;
 }
 
 showPage = (page) => {
@@ -263,5 +479,168 @@ getCities = async () => {
     };
 
     const fetchResponse = await fetch(`/cities`, settings);
+    cities = await fetchResponse.json();
+
+    return cities;
+}
+
+getCategories = async () => {
+    const settings = {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    };
+
+    const fetchResponse = await fetch(`/categories`, settings);
     return await fetchResponse.json();
+}
+
+getPositions = async () => {
+    const settings = {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    };
+
+    const fetchResponse = await fetch(`/positions`, settings);
+    return await fetchResponse.json();
+}
+
+addCategory = async () => {
+    let element = document.getElementById("addCategory-name");
+    let dto = {
+        name: element.value
+    };
+
+    const settings = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dto)
+    };
+
+    await fetch(`/categories`, settings);
+    showCategories();
+}
+
+addPosition = async () => {
+    let element = document.getElementById("addPosition-name");
+    let dto = {
+        name: element.value
+    };
+
+    const settings = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dto)
+    };
+
+    await fetch(`/positions`, settings);
+    showPositions();
+}
+
+addEducation = async () => {
+    let element = document.getElementById("addEducation-name");
+    let cityElement = document.getElementById("addEducation-city-select");
+
+    let dto = {
+        name: element.value,
+        cityId: cityElement.value
+    };
+
+    const settings = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dto)
+    };
+
+    await fetch(`/educations`, settings);
+    showEducations();
+}
+
+showAddEducation = async () => {
+    showPage('addEducation');
+
+    await getCities();
+
+    let addEducationSelect = document.getElementById("addEducation-city-select");
+    for (let city of cities) {
+        let option = document.createElement("option");
+        option.value = city.id;
+        option.text = city.name;
+        addEducationSelect.add(option);
+    }
+
+}
+
+savePosition = async () => {
+    let id = document.getElementById("editPosition-id").value;
+    let name = document.getElementById("editPosition-name").value;
+
+    const settings = {
+        method: 'PUT',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            id: id,
+            name: name
+        })
+    };
+
+    await fetch(`/positions`, settings);
+    showPositions();
+}
+
+saveEducation = async () => {
+    let id = document.getElementById("editEducation-id").value;
+    let name = document.getElementById("editEducation-name").value;
+    let city = document.getElementById("editEducation-city-select").value;
+
+    console.log(city);
+
+    const settings = {
+        method: 'PUT',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            id: id,
+            name: name,
+            cityId: city
+        })
+    };
+
+    await fetch(`/educations`, settings);
+    showEducations();
+}
+
+deletePosition = async (position) => {
+    if (confirm('Вы уверены, что хотите удалить должность ' + position.name + '?')) {
+        const settings = {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+
+        await fetch(`/positions/` + position.id, settings);
+
+        showPositions();
+    }
 }

@@ -21,10 +21,6 @@ public class CityServiceImpl implements CityService{
         return cityRepository.save(city);
     }
 
-    public City getById(Long id) {
-        return cityRepository.getById(id);
-    }
-
     public void delete(Long id) {
         cityRepository.deleteById(id);
     }

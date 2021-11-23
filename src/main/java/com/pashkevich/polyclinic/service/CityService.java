@@ -10,7 +10,5 @@ public interface CityService {
 
     City save(City city);
 
-    City getById(Long id);
-
     void delete(Long id);
 }

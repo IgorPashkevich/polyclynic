@@ -1,7 +1,9 @@
 package com.pashkevich.polyclinic.controller;
 
-import com.pashkevich.polyclinic.entity.City;
-import com.pashkevich.polyclinic.service.CityService;
+
+import com.pashkevich.polyclinic.dto.EducationDto;
+import com.pashkevich.polyclinic.entity.Education;
+import com.pashkevich.polyclinic.service.EducationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,29 +17,29 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cities")
+@RequestMapping("/educations")
 @AllArgsConstructor
-public class CityController {
+public class EducationController {
 
-    private final CityService cityService;
+    private final EducationService educationService;
 
     @GetMapping
-    public List<City> findAll() {
-        return cityService.findAll();
+    public List<Education> findAll() {
+        return educationService.findAll();
     }
 
     @PostMapping()
-    public City save(@RequestBody City city) {
-        return cityService.save(city);
+    public Education save(@RequestBody EducationDto dto) {
+        return educationService.save(dto);
     }
 
     @PutMapping()
-    public City edit(@RequestBody City city) {
-        return cityService.save(city);
+    public Education edit(@RequestBody EducationDto dto) {
+        return educationService.update(dto);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        cityService.delete(id);
+        educationService.delete(id);
     }
 }

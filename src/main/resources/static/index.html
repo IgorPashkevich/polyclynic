@@ -82,11 +82,74 @@
     </div>
 
     <div class="container page" id="categories" style="display: none">
-        categories
+        <table class="table table-striped">
+            <thead>
+            <td>№</td>
+            <td>Название</td>
+            <td></td>
+            </thead>
+            <tbody id="tbody-categories">
+            </tbody>
+        </table>
+
+        <button class="btn btn-primary" onclick="showPage('addCategory')">Добавить категорию</button>
     </div>
 
     <div class="container page" id="positions" style="display: none">
-        positions
+        <table class="table table-striped">
+            <thead>
+            <td>№</td>
+            <td>Название</td>
+            <td></td>
+            </thead>
+            <tbody id="tbody-positions">
+            </tbody>
+        </table>
+
+        <button class="btn btn-primary" onclick="showPage('addPosition')">Добавить должность</button>
+    </div>
+
+    <div class="container page" id="addPosition" style="display: none">
+        <form>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="addPosition-name" placeholder="Должность">
+            </div>
+
+            <button type="submit" onclick="addPosition()" class="btn btn-primary">Добавить</button>
+            <button type="submit" onclick="showPage('positions')" class="btn btn-light">Назад</button>
+
+        </form>
+    </div>
+
+    <div class="container page" id="editPosition" style="display: none">
+        <form>
+            <input type="hidden" id="editPosition-id">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="editPosition-name" placeholder="Должность">
+            </div>
+
+            <button type="submit" onclick="savePosition()" class="btn btn-primary">Сохранить</button>
+            <button type="submit" onclick="showPage('positions')" class="btn btn-light">Назад</button>
+
+        </form>
+    </div>
+
+    <div class="container page" id="editEducation" style="display: none">
+        <form>
+            <input type="hidden" id="editEducation-id">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="editEducation-name" placeholder="Название">
+            </div>
+
+            <div class="input-group mb-3">
+                <select class="form-select" id="editEducation-city-select">
+                </select>
+            </div>
+
+            <button type="submit" onclick="saveEducation()" class="btn btn-primary">Сохранить</button>
+            <button type="submit" onclick="showPage('educations')" class="btn btn-light">Назад</button>
+
+        </form>
     </div>
 
     <div class="container page" id="salary" style="display: none">
@@ -94,7 +157,35 @@
     </div>
 
     <div class="container page" id="educations" style="display: none">
-        educations
+        <table class="table table-striped">
+            <thead>
+            <td>№</td>
+            <td>Название</td>
+            <td>Город</td>
+            <td></td>
+            </thead>
+            <tbody id="tbody-educations">
+            </tbody>
+        </table>
+
+        <button class="btn btn-primary" onclick="showAddEducation()">Добавить учебное заведение</button>
+    </div>
+
+    <div class="container page" id="addEducation" style="display: none">
+        <form>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="addEducation-name" placeholder="Название">
+            </div>
+
+            <div class="input-group mb-3">
+                <select class="form-select" id="addEducation-city-select">
+                </select>
+            </div>
+
+            <button type="submit" onclick="addEducation()" class="btn btn-primary">Добавить</button>
+            <button type="submit" onclick="showPage('educations')" class="btn btn-light">Назад</button>
+
+        </form>
     </div>
 
     <div class="container page" id="editEmployee" style="display: none">
@@ -122,7 +213,7 @@
             </div>
 
             <div class="input-group mb-3">
-                <select class="form-select" id="education-select">
+                <select class="form-select" id="editEmployee-education-select">
                 </select>
             </div>
 
@@ -145,6 +236,31 @@
 
             <button type="submit" onclick="addCity()" class="btn btn-primary">Добавить</button>
             <button type="submit" onclick="showPage('cities')" class="btn btn-light">Назад</button>
+
+        </form>
+    </div>
+
+    <div class="container page" id="editCategory" style="display: none">
+        <form>
+            <input type="hidden" id="editCategory-id">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="editCategory-name" placeholder="Название">
+            </div>
+
+            <button type="submit" onclick="saveCategory()" class="btn btn-primary">Сохранить</button>
+            <button type="submit" onclick="showPage('categories')" class="btn btn-light">Назад</button>
+
+        </form>
+    </div>
+
+    <div class="container page" id="addCategory" style="display: none">
+        <form>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="addCategory-name" placeholder="Название">
+            </div>
+
+            <button type="submit" onclick="addCategory()" class="btn btn-primary">Добавить</button>
+            <button type="submit" onclick="showPage('categories')" class="btn btn-light">Назад</button>
 
         </form>
     </div>

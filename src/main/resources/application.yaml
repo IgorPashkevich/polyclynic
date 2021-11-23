@@ -4,7 +4,7 @@ server:
 spring:
   application.name: polyclinic
   datasource:
-    url: jdbc:postgresql://localhost:5432/polyclinic
+    url: jdbc:postgresql://localhost:5433/polyclinic
     username: postgres
     password: postgres
   jpa:
