@@ -12,37 +12,36 @@ showEmployees = () => {
     document.title = 'Поликлиника - Сотрудники';
     showPage("employees");
 
-    let employees = [
-        {
-            id: 1,
-            firstName: 'firstName',
-            middleName: 'middleName',
-            lastName: 'lastName',
-            dateOfBirth: '21-11-2021',
-            category: {name: 'category'},
-            education: {name: 'education'},
-            position: {name: 'position'}
-        }
-    ];
+    getEmployees().then(employees => {
+        drawEmployees(employees);
+    })
+}
+
+drawEmployees = (employees) => {
+    let elements = document.querySelectorAll(".employee-row");
+    elements.forEach(element => {
+        element.parentNode.removeChild(element);
+    });
 
     let employeesTable = document.getElementById("tbody-employees");
-
     employees.forEach((employee, index) => {
         let row = employeesTable.insertRow(index);
+        row.className = "employee-row";
+
         let cell = row.insertCell(0);
         let text = document.createTextNode(employee.id);
         cell.appendChild(text);
 
         cell = row.insertCell(1);
-        text = document.createTextNode(employee.firstName);
+        text = document.createTextNode(employee.lastName);
         cell.appendChild(text);
 
         cell = row.insertCell(2);
-        text = document.createTextNode(employee.middleName);
+        text = document.createTextNode(employee.firstName);
         cell.appendChild(text);
 
         cell = row.insertCell(3);
-        text = document.createTextNode(employee.lastName);
+        text = document.createTextNode(employee.middleName);
         cell.appendChild(text);
 
         cell = row.insertCell(4);
@@ -84,6 +83,85 @@ showEmployees = () => {
     })
 }
 
+addEmployee = () => {
+    let lastName = document.getElementById("addEmployee-lastName").value;
+    let firstName = document.getElementById("addEmployee-firstName").value;
+    let middleName = document.getElementById("addEmployee-middleName").value;
+    let dateOfBirth = document.getElementById("addEmployee-dateOfBirth").value;
+    let category = document.getElementById("addEmployee-category-select").value;
+    let education = document.getElementById("addEmployee-education-select").value;
+    let position = document.getElementById("addEmployee-position-select").value;
+
+    const dto = {
+        lastName: lastName,
+        firstName: firstName,
+        middleName: middleName,
+        dateOfBirth: dateOfBirth,
+        categoryId: category,
+        educationId: education,
+        positionId: position,
+    }
+
+    const settings = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dto)
+    };
+
+    fetch(`/employees`, settings).then(() => {
+        showEmployees();
+    });
+}
+
+showAddEmployee = async () => {
+    showPage('addEmployee');
+
+    let categorySelect = document.getElementById("addEmployee-category-select");
+    getCategories().then(categories => {
+        for (let i = 0; i < categories.length; i++) {
+            categorySelect.remove(0);
+        }
+
+        for (let category of categories) {
+            let option = document.createElement("option");
+            option.value = category.id;
+            option.text = category.name;
+            categorySelect.add(option);
+        }
+    })
+
+    let educationSelect = document.getElementById("addEmployee-education-select");
+    getEducations().then(educations => {
+        for (let i = 0; i < educations.length; i++) {
+            educationSelect.remove(0);
+        }
+
+        for (let education of educations) {
+            let option = document.createElement("option");
+            option.value = education.id;
+            option.text = education.name;
+            educationSelect.add(option);
+        }
+    })
+
+    let positionSelect = document.getElementById("addEmployee-position-select");
+    getPositions().then(positions => {
+        for (let i = 0; i < positions.length; i++) {
+            positionSelect.remove(0);
+        }
+
+        for (let position of positions) {
+            let option = document.createElement("option");
+            option.value = position.id;
+            option.text = position.name;
+            positionSelect.add(option);
+        }
+    })
+}
+
 deleteEmployee = (employee) => {
     if (confirm('Вы уверены, что хотите удалить сотрудника ' + employee.firstName + ' ' + employee.lastName)) {
 
@@ -93,24 +171,105 @@ deleteEmployee = (employee) => {
 editEmployee = (employee) => {
     document.title = 'Поликлиника - Сотрудники - ' + employee.firstName + ' ' + employee.lastName;
 
-    let categorySelect = document.getElementById("category-select");
-    let option = document.createElement("option");
-    option.text = "Kiwi";
-    categorySelect.add(option);
-
+    document.getElementById("editEmployee-id").value = employee.id;
     document.getElementById("editEmployee-lastName").value = employee.lastName;
     document.getElementById("editEmployee-firstName").value = employee.firstName;
     document.getElementById("editEmployee-middleName").value = employee.middleName;
     document.getElementById("editEmployee-dateOfBirth").value = employee.dateOfBirth;
 
+    let categorySelect = document.getElementById("editEmployee-category-select");
+    getCategories().then(categories => {
+        for (let i = 0; i < categories.length; i++) {
+            categorySelect.remove(0);
+        }
+
+        for (let category of categories) {
+            let option = document.createElement("option");
+            option.value = category.id;
+            option.text = category.name;
+
+            if (category.id === employee.category.id) {
+                option.selected = true;
+            }
+
+            categorySelect.add(option);
+        }
+    })
+
+    let educationSelect = document.getElementById("editEmployee-education-select");
+    getEducations().then(educations => {
+        for (let i = 0; i < educations.length; i++) {
+            educationSelect.remove(0);
+        }
+
+        for (let education of educations) {
+            let option = document.createElement("option");
+            option.value = education.id;
+            option.text = education.name;
+
+            if (education.id === employee.education.id) {
+                option.selected = true;
+            }
+
+            educationSelect.add(option);
+        }
+    })
+
+    let positionSelect = document.getElementById("editEmployee-position-select");
+    getPositions().then(positions => {
+        for (let i = 0; i < positions.length; i++) {
+            positionSelect.remove(0);
+        }
+
+        for (let position of positions) {
+            let option = document.createElement("option");
+            option.value = position.id;
+            option.text = position.name;
+
+            if (position.id === employee.position.id) {
+                option.selected = true;
+            }
+
+            positionSelect.add(option);
+        }
+    })
+
     showPage("editEmployee");
 }
 
 saveEmployee = () => {
+    let id = document.getElementById("editEmployee-id").value;
     let lastName = document.getElementById("editEmployee-lastName").value;
     let firstName = document.getElementById("editEmployee-firstName").value;
     let middleName = document.getElementById("editEmployee-middleName").value;
     let dateOfBirth = document.getElementById("editEmployee-dateOfBirth").value;
+    let position = document.getElementById("editEmployee-position-select").value;
+    let education = document.getElementById("editEmployee-education-select").value;
+    let category = document.getElementById("editEmployee-category-select").value;
+
+    const dto = {
+        id: id,
+        lastName: lastName,
+        firstName: firstName,
+        middleName: middleName,
+        dateOfBirth: dateOfBirth,
+        categoryId: category,
+        educationId: education,
+        positionId: position,
+    }
+
+    const settings = {
+        method: 'PUT',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dto)
+    };
+
+    fetch(`/employees`, settings).then(() => {
+        showEmployees();
+    });
 }
 
 showCities = () => {
@@ -300,24 +459,23 @@ editEducation = async (education) => {
     document.getElementById("editEducation-id").value = education.id;
     document.getElementById("editEducation-name").value = education.name;
 
-    await getCities();
-
     let editEducationSelect = document.getElementById("editEducation-city-select");
-
-    for (let i = 0; i < cities.length; i++) {
-        editEducationSelect.remove(0);
-    }
-
-    for (let city of cities) {
-        let option = document.createElement("option");
-        option.value = city.id;
-        option.text = city.name;
-
-        if (education.city.name === city.name) {
-            option.selected = true;
+    getCities().then(cities => {
+        for (let i = 0; i < cities.length; i++) {
+            editEducationSelect.remove(0);
         }
-        editEducationSelect.add(option);
-    }
+
+        for (let city of cities) {
+            let option = document.createElement("option");
+            option.value = city.id;
+            option.text = city.name;
+
+            if (education.city.name === city.name) {
+                option.selected = true;
+            }
+            editEducationSelect.add(option);
+        }
+    });
 }
 
 getEducations = async () => {
@@ -331,11 +489,6 @@ getEducations = async () => {
 
     const fetchResponse = await fetch(`/educations`, settings);
     return await fetchResponse.json();
-}
-
-showSalary = () => {
-    document.title = 'Поликлиника - Зарплаты';
-    showPage("salary");
 }
 
 showCategories = () => {
@@ -510,6 +663,19 @@ getPositions = async () => {
     return await fetchResponse.json();
 }
 
+getEmployees = async () => {
+    const settings = {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    };
+
+    const fetchResponse = await fetch(`/employees`, settings);
+    return await fetchResponse.json();
+}
+
 addCategory = async () => {
     let element = document.getElementById("addCategory-name");
     let dto = {
@@ -643,4 +809,166 @@ deletePosition = async (position) => {
 
         showPositions();
     }
+}
+
+searchEmployeeByLastName = async () => {
+    let lastName = document.getElementById("searchEmployee-lastName").value;
+    if (lastName === '') {
+        return;
+    }
+
+    document.getElementById("searchEmployee-lastName").value = null;
+
+    const settings = {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    };
+
+    let fetchResponse = await fetch('/employees/search?lastName=' + lastName, settings);
+
+    await fetchResponse.json().then(employees => {
+        drawEmployees(employees);
+    });
+}
+
+
+showSalary = () => {
+    document.title = 'Поликлиника - Зарплаты';
+    showPage("salary");
+
+    showAllSalary();
+
+    let employeesSelect = document.getElementById("salary-employee-select");
+    getEmployees().then(employees => {
+        for (let i = 0; i < employees.length; i++) {
+            employeesSelect.remove(0);
+        }
+
+        for (let employee of employees) {
+            let option = document.createElement("option");
+            option.value = employee.id;
+            option.text = employee.lastName + ' ' + employee.firstName;
+            employeesSelect.add(option);
+        }
+    })
+}
+
+showAllSalary = async () => {
+    const settings = {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    };
+
+    let fetchResponse = await fetch('/salary', settings);
+
+    await fetchResponse.json().then(salaries => {
+        drawSalary(salaries);
+    });
+}
+
+searchEmployeeSalary = async () => {
+    let employeeId = document.getElementById("salary-employee-select").value;
+
+    console.log(employeeId);
+
+    const settings = {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    };
+
+    let fetchResponse = await fetch('/salary/employee/' + employeeId, settings);
+
+    await fetchResponse.json().then(salaries => {
+        drawSalary(salaries);
+    });
+}
+
+drawSalary = (salaries) => {
+    showPage('salary');
+
+    let elements = document.querySelectorAll(".salary-row");
+    if (elements) {
+        elements.forEach(element => {
+            element.parentNode.removeChild(element);
+        });
+    }
+
+    let salariesTable = document.getElementById("tbody-salaries");
+    salaries.forEach((salary, index) => {
+        let row = salariesTable.insertRow(index);
+        row.className = "salary-row";
+
+        let cell = row.insertCell(0);
+        let text = document.createTextNode(index + 1);
+        cell.appendChild(text);
+
+        cell = row.insertCell(1);
+        text = document.createTextNode(salary.employee.lastName);
+        cell.appendChild(text);
+
+        cell = row.insertCell(2);
+        text = document.createTextNode(salary.employee.firstName);
+        cell.appendChild(text);
+
+        cell = row.insertCell(3);
+        text = document.createTextNode(salary.date);
+        cell.appendChild(text);
+
+        cell = row.insertCell(4);
+        text = document.createTextNode(salary.amount);
+        cell.appendChild(text);
+    })
+}
+
+showAddSalary = () => {
+    showPage('addSalary');
+    let employeesSelect = document.getElementById("addSalary-employee-select");
+    getEmployees().then(employees => {
+
+        console.log(employees);
+        for (let i = 0; i < employees.length; i++) {
+            employeesSelect.remove(0);
+        }
+
+        for (let employee of employees) {
+            let option = document.createElement("option");
+            option.value = employee.id;
+            option.text = employee.lastName + ' ' + employee.firstName;
+            employeesSelect.add(option);
+        }
+    });
+}
+
+addSalary = async () => {
+    let employeeId = document.getElementById("addSalary-employee-select").value;
+    let amount = document.getElementById("addSalary-amount").value;
+
+    const dto = {
+        employee: employeeId,
+        amount: amount,
+    }
+
+    const settings = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dto)
+    };
+
+    let fetchResponse = await fetch('/salary', settings);
+
+    await fetchResponse.json().then(() => {
+        showAllSalary();
+    });
 }

@@ -50,21 +50,73 @@
     </nav>
 
     <div class="container page" id="employees" style="display: inline">
-        <table class="table table-striped">
-            <thead>
-            <td>№</td>
-            <td>Фамилия</td>
-            <td>Имя</td>
-            <td>Отчество</td>
-            <td>Дата рождения</td>
-            <td>Категория</td>
-            <td>Образование</td>
-            <td>Должность</td>
-            <td></td>
-            </thead>
-            <tbody id="tbody-employees">
-            </tbody>
-        </table>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="searchEmployee-lastName" placeholder="Фамилия">
+        </div>
+        <button class="btn btn-primary" onclick="searchEmployeeByLastName()">Найти сотрудника по фамилии</button>
+
+        <div style="margin: 50px 0">
+            <button class="btn btn-primary" onclick="showEmployees()">Найти всех</button>
+        </div>
+
+        <div style="margin-top: 50px">
+            <table class="table table-striped">
+                <thead>
+                <td>№</td>
+                <td>Фамилия</td>
+                <td>Имя</td>
+                <td>Отчество</td>
+                <td>Дата рождения</td>
+                <td>Категория</td>
+                <td>Образование</td>
+                <td>Должность</td>
+                <td></td>
+                </thead>
+                <tbody id="tbody-employees">
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary" onclick="showAddEmployee()">Добавить сотрудника</button>
+        </div>
+    </div>
+
+    <div class="container page" id="addEmployee" style="display: none">
+        <form>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="addEmployee-lastName" placeholder="Фамилия">
+            </div>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="addEmployee-firstName" placeholder="Имя">
+            </div>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="addEmployee-middleName" placeholder="Имя">
+            </div>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="addEmployee-dateOfBirth" placeholder="Дата рождения">
+            </div>
+
+            <div class="input-group mb-3">
+                <select class="form-select" id="addEmployee-category-select">
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <select class="form-select" id="addEmployee-education-select">
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <select class="form-select" id="addEmployee-position-select">
+                </select>
+            </div>
+
+            <button type="submit" onclick="addEmployee()" class="btn btn-primary">Добавить</button>
+            <button type="submit" onclick="showPage('employees')" class="btn btn-light">Назад</button>
+
+        </form>
     </div>
 
     <div class="container page" id="cities" style="display: none">
@@ -153,7 +205,48 @@
     </div>
 
     <div class="container page" id="salary" style="display: none">
-        salary
+        <div class="input-group mb-3">
+            <select class="form-select" id="salary-employee-select">
+            </select>
+        </div>
+        <button class="btn btn-primary" onclick="searchEmployeeSalary()">Найти все зарплаты сотрудника</button>
+
+        <div style="margin: 50px 0">
+            <button class="btn btn-primary" onclick="showAllSalary()">Показать всех</button>
+        </div>
+
+        <div style="margin-top: 50px">
+            <table class="table table-striped">
+                <thead>
+                <td>№</td>
+                <td>Фамилия</td>
+                <td>Имя</td>
+                <td>Дата</td>
+                <td>Сумма</td>
+                </thead>
+                <tbody id="tbody-salaries">
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary" onclick="showAddSalary()">Выдать зарплату</button>
+        </div>
+    </div>
+
+    <div class="container page" id="addSalary" style="display: none">
+        <form>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="addSalary-amount" placeholder="Сумма">
+            </div>
+
+            <div class="input-group mb-3">
+                <select class="form-select" id="addSalary-employee-select">
+                </select>
+            </div>
+
+            <button type="submit" onclick="addSalary()" class="btn btn-primary">Добавить</button>
+            <button type="submit" onclick="showPage('salary')" class="btn btn-light">Назад</button>
+
+        </form>
     </div>
 
     <div class="container page" id="educations" style="display: none">
@@ -208,7 +301,7 @@
             </div>
 
             <div class="input-group mb-3">
-                <select class="form-select" id="category-select">
+                <select class="form-select" id="editEmployee-category-select">
                 </select>
             </div>
 
@@ -218,7 +311,7 @@
             </div>
 
             <div class="input-group mb-3">
-                <select class="form-select" id="position-select">
+                <select class="form-select" id="editEmployee-position-select">
                 </select>
             </div>
 

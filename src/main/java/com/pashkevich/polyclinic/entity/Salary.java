@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "salary")
@@ -30,7 +30,7 @@ public class Salary {
     private Employee employee;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "amount")
     private Double amount;
